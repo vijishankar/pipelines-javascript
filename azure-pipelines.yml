@@ -18,6 +18,18 @@ steps:
 - script: |
     npm pack
   displayName: 'Package for npm release'
+  
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: '**/TEST-RESULTS.xml'
+    
+- task: PublishCodeCoverageResults@1
+  inputs: 
+    codeCoverageTool: Cobertura # or JaCoCo
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
 
 - task: CopyFiles@2
   inputs:
